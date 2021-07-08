@@ -12,3 +12,13 @@ const links = document.querySelectorAll('nav ul li a').forEach(link =>
     nav.classList.remove('show')
   })
 )
+// mudar header de acordo com o scroll
+const header = document.querySelector('#header')
+const navHeight = header.offsetHeight
+const logo = document.querySelector('#header nav .logo')
+
+window.addEventListener('scroll', () => {
+  window.scrollY >= navHeight
+    ? header.classList.add('scroll')
+    : header.classList.remove('scroll')
+})
