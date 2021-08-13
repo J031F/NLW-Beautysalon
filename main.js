@@ -13,15 +13,17 @@ const links = document.querySelectorAll('nav ul li a').forEach(link =>
   })
 )
 // mudar header de acordo com o scroll
+
 const header = document.querySelector('#header')
 const navHeight = header.offsetHeight
-const logo = document.querySelector('#header nav .logo')
 
-window.addEventListener('scroll', () => {
-  window.scrollY >= navHeight
-    ? header.classList.add('scroll')
-    : header.classList.remove('scroll')
-})
+function changeHeaderWhenScroll() {
+  if (window.scrollY >= navHeight) {
+    header.classList.add('scroll')
+  } else {
+    header.classList.remove('scroll')
+  }
+}
 
 /* testimonial swipper corrosel */
 const swipper = new Swiper('.swiper-container', {
@@ -30,7 +32,13 @@ const swipper = new Swiper('.swiper-container', {
     el: '.swiper-pagination'
   },
   mousewheel: true,
-  keyboard: true
+  keyboard: true,
+  breakpoints: {
+    767: {
+      slidesPerView: 2,
+      setWrapperSize: true
+    }
+  }
 })
 
 /* ScrollReveal */
@@ -46,6 +54,49 @@ scrollReveal.reveal(
   #about .image, #about text,
   #services header, #services .card,
   #testimonials header, #testimonials .testimonials,
-  #contact .text, #contact .links`,
+  #contact .text, #contact .links
+  footer .brand, footer .social`,
   { interval: 100 }
 )
+
+// back-to-top button
+const backToTopButton = document.querySelector('.back-to-top')
+function backToTop() {
+  if (window.scrollY >= 740) {
+    backToTopButton.classList.add('show')
+  } else {
+    backToTopButton.classList.remove('show')
+  }
+}
+
+/* Menu Ativo */
+const sections = document.querySelectorAll('main section[id]')
+function activeMenu() {
+  const checkpoint = window.pageYOffset + (window.innerHeight / 8) * 4
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop
+    const sectionHeight = section.offsetHeight
+    const sectionId = section.getAttribute('id')
+
+    const checkpointStart = checkpoint >= sectionTop
+    const checkpointEnd = checkpoint <= sectionTop + sectionHeight
+
+    if (checkpointStart && checkpointEnd) {
+      document
+        .querySelector('nav ul li a[href*=' + sectionId + ']')
+        .classList.add('active')
+    } else {
+      document
+        .querySelector('nav ul li a[href*=' + sectionId + ']')
+        .classList.remove('active')
+    }
+  })
+}
+
+/* when scroll */
+window.addEventListener('scroll', () => {
+  changeHeaderWhenScroll()
+  backToTop()
+  activeMenu()
+})
